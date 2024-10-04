@@ -12,6 +12,7 @@ builder.Services.AddCustomCors()
                 .AddCustomAuthentication(builder.Configuration)
                 .AddCustomServices();
 
+builder.Services.AddTransient<RoleSeeder>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -28,6 +29,10 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await dbContext.Database.MigrateAsync();
+
+    // Seed roles after applying migrations
+    var roleSeeder = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
+    await roleSeeder.SeedRolesAsync(); 
 }
 
 app.UseCors("AllowAll"); // For easier testing since it's a simple assessment project

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using FirstBrick.Enums;
 
 namespace FirstBrick.Services;
 
@@ -23,11 +24,11 @@ public class TokenService : ITokenService
     {
         var claims = new List<Claim>
         {
-            new Claim("userId", user.Id),
-            new Claim("email", user.Email),
-            new Claim("firstName", user.FirstName),
-            new Claim("lastName", user.LastName),
-            new Claim("phoneNumber", user.PhoneNumber),
+            new (UserClaimsEnum.USER_ID, user.Id),
+            new (UserClaimsEnum.EMAIL, user.Email),
+            new (UserClaimsEnum.FIRST_NAME, user.FirstName),
+            new (UserClaimsEnum.LAST_NAME, user.LastName),
+            new (UserClaimsEnum.PHONE_NUMBER, user.PhoneNumber),
         };
 
         var roles = await _userManager.GetRolesAsync(user);

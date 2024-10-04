@@ -7,12 +7,20 @@ public class SaudiPhoneNumberAttribute : ValidationAttribute
 {
     public override bool IsValid(object value)
     {
+        // If the value is null or empty, we consider it valid (because it's optional in some cases)
+        if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+            return true;
+
         var phoneNumber = NormalizePhoneNumber(value.ToString());
         return Regex.IsMatch(phoneNumber, @"^\+9665\d{8}$");
     }
 
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
+        // If the value is null or empty, we consider it valid (because it's optional in some cases)
+        if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+            return ValidationResult.Success;
+
         if (!IsValid(value))
         {
             return new ValidationResult("Please enter a valid Saudi phone number.");

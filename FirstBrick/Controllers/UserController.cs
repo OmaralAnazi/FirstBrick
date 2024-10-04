@@ -1,7 +1,7 @@
-﻿using FirstBrick.Dtos.Requests;
-using FirstBrick.Entities;
+﻿using FirstBrick.Attributes;
+using FirstBrick.Dtos.Requests;
+using FirstBrick.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FirstBrick.Controllers;
@@ -10,52 +10,48 @@ namespace FirstBrick.Controllers;
 [ApiController]
 public class UserController : BaseController
 {
-    private readonly UserManager<AppUser> _userManager;
+    private readonly IUserService _userService;
 
-    public UserController(UserManager<AppUser> userManager)
+    public UserController(IUserService userService)
     {
-        _userManager = userManager;
+        _userService = userService;
     }
 
     [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetCurrentUser()
     {
-        var user = await _userManager.FindByIdAsync(UserId);
-        if (user == null)
-        {
-            return NotFound("User not found.");
-        }
+        var userDto = await _userService.GetUserByIdAsync(UserId);
+        return Ok(userDto);
+    }
 
-        // TODO: service logic, shouldnt be here:
-        var userDto = new 
-        {
-            user.Id,
-            user.Email,
-            user.FirstName,
-            user.LastName,
-            user.PhoneNumber,
-            user.Birthdate,
-            user.CreatedAt,
-        };
+    [HttpGet("{userId}")]
+    [RequireAdminRole]
+    public async Task<IActionResult> GetUserById([FromRoute] string userId)
+    {
+        var userDto = await _userService.GetUserByIdAsync(userId);
+        return Ok(userDto);
+    }
+
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> UpdateCurrentUser([FromBody] UpdateUserDto updateUserDto)
+    {
+        var (result, userDto) = await _userService.UpdateUserByIdAsync(UserId, updateUserDto);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
 
         return Ok(userDto);
     }
 
-
-    // TODO: finish this endpoint
-    [HttpGet("{userId}")]
-    public async Task<IActionResult> GetUserById([FromRoute] string userId)
-    {
-        return Ok(userId);
-    }
-
-
-    // TODO: finish this endpoint
     [HttpPut("{userId}")]
-    public async Task<IActionResult> UpdateUser([FromRoute] string userId, [FromBody] UpdateUserDto updateUserDto)
+    [RequireAdminRole]
+    public async Task<IActionResult> UpdateUserById([FromRoute] string userId, [FromBody] UpdateUserDto updateUserDto)
     {
-        return Ok(userId);
-    }
+        var (result, userDto) = await _userService.UpdateUserByIdAsync(userId, updateUserDto);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
 
+        return Ok(userDto);
+    }
 }

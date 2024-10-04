@@ -18,5 +18,7 @@ public class ApiException : Exception
 public static class ApiExceptions
 {
     public static readonly ApiException Unauthorized = new ApiException("Unauthorized", HttpStatusCode.Unauthorized, "E0001");
+    public static readonly ApiException Credentials = new ApiException("Invalid email or password", HttpStatusCode.Unauthorized, "E0002");
+    public static readonly ApiException UserNotFound = new ApiException("User not found", HttpStatusCode.NotFound, "E0003");
 }
 
