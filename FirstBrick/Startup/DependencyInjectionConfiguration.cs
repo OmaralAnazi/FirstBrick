@@ -1,4 +1,7 @@
-﻿using FirstBrick.Interfaces;
+﻿using FirstBrick.EventHandlers;
+using FirstBrick.Events;
+using FirstBrick.Interfaces;
+using FirstBrick.Repositories;
 using FirstBrick.Services;
 
 namespace FirstBrick.Startup;
@@ -10,6 +13,11 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+        // Register event handlers
+        services.AddScoped<IEventHandler<UserRegisteredEvent>, UserRegisteredEventHandler>();
 
         return services;
     }

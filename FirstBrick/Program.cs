@@ -2,6 +2,8 @@ using FirstBrick.Startup;
 using FirstBrick.Data;
 using Microsoft.EntityFrameworkCore;
 using FirstBrick.Middleware;
+using EasyNetQ;
+using FirstBrick.BackgroundServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,14 @@ builder.Services.AddCustomCors()
                 .AddCustomIdentity()
                 .AddCustomAuthentication(builder.Configuration)
                 .AddCustomServices();
+
+// EasyNetQ Setup 
+var messageBrokerHost = builder.Configuration["MessageBroker:Host"];
+var messageBrokerUsername = builder.Configuration["MessageBroker:Username"];
+var messageBrokerPassword = builder.Configuration["MessageBroker:Password"];
+var connectionStringEasyNetQ = $"host={messageBrokerHost};username={messageBrokerUsername};password={messageBrokerPassword}";
+builder.Services.AddSingleton(RabbitHutch.CreateBus(connectionStringEasyNetQ));
+builder.Services.AddSingleton<IHostedService, RabbitMQListener>();
 
 builder.Services.AddTransient<RoleSeeder>();
 builder.Services.AddEndpointsApiExplorer();
