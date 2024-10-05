@@ -42,9 +42,9 @@ public class PaymentController : BaseController
 
     [HttpGet("transactions")]
     [Authorize]
-    public async Task<IActionResult> GetTransactionsForCurrentUser()
+    public async Task<IActionResult> GetTransactionsForCurrentUser([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var transactions = await _paymentService.GetTransactionsAsync(UserId);
-        return Ok(transactions);
+        var paginatedTransactions = await _paymentService.GetTransactionsAsync(UserId, pageNumber, pageSize);
+        return Ok(paginatedTransactions);
     }
 }

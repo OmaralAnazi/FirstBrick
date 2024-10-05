@@ -1,4 +1,5 @@
 ﻿using FirstBrick.Data;
+using FirstBrick.Dtos.Responses;
 using FirstBrick.Entities;
 using FirstBrick.Enums;
 using FirstBrick.Exceptions;
@@ -52,11 +53,22 @@ public class PaymentRepository : IPaymentRepository
         return wallet;
     }
 
-    public async Task<List<Transaction>> GetTransactionsAsync(string userId)
+    public async Task<PaginatedResponse<Transaction>> GetTransactionsAsync(string userId, int pageNumber, int pageSize)
     {
         var wallet = await FindWalletByUserId(userId);
-        var transactions = await _context.Transactions.Where(t => t.WalletId == wallet.Id).ToListAsync();
-        return transactions;
+
+        var totalTransactions = await _context.Transactions
+            .Where(t => t.WalletId == wallet.Id)
+            .CountAsync();
+
+        var transactions = await _context.Transactions
+            .Where(t => t.WalletId == wallet.Id)
+            .OrderByDescending(t => t.Timestamp) // Order by most recent
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PaginatedResponse<Transaction>(transactions, totalTransactions, pageNumber, pageSize);
     }
 
     public async Task<Transaction> CreateTransactionAsync(int walletId, TransactionType type, double amount, string description)

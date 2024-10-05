@@ -38,10 +38,15 @@ public class PaymentService : IPaymentService
         return new BalanceDto(wallet);
     }
 
-    public async Task<List<TransactionsDto>> GetTransactionsAsync(string userId)
+    public async Task<PaginatedResponse<TransactionsDto>> GetTransactionsAsync(string userId, int pageNumber, int pageSize)
     {
         var wallet = await _paymentRepository.FindWalletByUserId(userId);
-        var transactions = await _paymentRepository.GetTransactionsAsync(userId);
-        return transactions.Select(transaction => new TransactionsDto(transaction, wallet)).ToList();
+        var paginatedTransactions = await _paymentRepository.GetTransactionsAsync(userId, pageNumber, pageSize);
+
+        var transactionsDto = paginatedTransactions.Items
+            .Select(transaction => new TransactionsDto(transaction, wallet))
+            .ToList();
+        
+        return new PaginatedResponse<TransactionsDto>(transactionsDto, paginatedTransactions.TotalCount, pageNumber, pageSize);
     }
 }

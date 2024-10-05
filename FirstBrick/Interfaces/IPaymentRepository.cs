@@ -1,4 +1,5 @@
-﻿using FirstBrick.Entities;
+﻿using FirstBrick.Dtos.Responses;
+using FirstBrick.Entities;
 using FirstBrick.Enums;
 
 namespace FirstBrick.Interfaces;
@@ -9,6 +10,6 @@ public interface IPaymentRepository
     Task<Wallet> CreateWalletAsync(string userId);
     Task<Wallet> DepositAsync(string userId, double amount);
     Task<Wallet> WithdrawAsync(string userId, double amount);
-    Task<List<Transaction>> GetTransactionsAsync(string userId);
+    Task<PaginatedResponse<Transaction>> GetTransactionsAsync(string userId, int pageNumber, int pageSize);
     Task<Transaction> CreateTransactionAsync(int walletId, TransactionType type, double amount, string description);
 }

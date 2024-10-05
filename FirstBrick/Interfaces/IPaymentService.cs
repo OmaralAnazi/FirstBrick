@@ -8,5 +8,5 @@ public interface IPaymentService
     public Task<BalanceDto> DepositAsync(string userId, double amount);
     public Task<BalanceDto> WithdrawAsync(string userId, double amount);
     public Task<BalanceDto> GetBalanceAsync(string userId);
-    public Task<List<TransactionsDto>> GetTransactionsAsync(string userId);
+    public Task<PaginatedResponse<TransactionsDto>> GetTransactionsAsync(string userId, int pageNumber, int pageSize);
 }
