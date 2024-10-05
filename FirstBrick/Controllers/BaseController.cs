@@ -7,7 +7,7 @@ namespace FirstBrick.Controllers;
 [ApiController]
 public class BaseController : ControllerBase
 {
-    protected string UserId => User.Claims.FirstOrDefault(c => c.Type == UserClaimsEnum.USER_ID)?.Value ?? throw ApiExceptions.Unauthorized;
+    protected string UserId => User.Claims.FirstOrDefault(c => c.Type == UserClaimsType.USER_ID)?.Value ?? throw ApiExceptions.Unauthorized;
 
 }
 

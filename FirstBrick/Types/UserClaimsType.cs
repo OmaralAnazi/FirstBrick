@@ -1,6 +1,6 @@
 ﻿namespace FirstBrick.Enums;
 
-public class UserClaimsEnum // Not an enum but has a similar effect without needing to convert ints
+public class UserClaimsType
 {
     public const string USER_ID = "user_id";
     public const string EMAIL = "email";

@@ -14,7 +14,7 @@ public class RoleSeeder
 
     public async Task SeedRolesAsync()
     {
-        var roles = new List<string> { UserRolesEnum.ADMIN };
+        var roles = new List<string> { UserRolesType.ADMIN };
 
         foreach (var role in roles)
         {

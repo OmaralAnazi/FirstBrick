@@ -24,11 +24,11 @@ public class TokenService : ITokenService
     {
         var claims = new List<Claim>
         {
-            new (UserClaimsEnum.USER_ID, user.Id),
-            new (UserClaimsEnum.EMAIL, user.Email),
-            new (UserClaimsEnum.FIRST_NAME, user.FirstName),
-            new (UserClaimsEnum.LAST_NAME, user.LastName),
-            new (UserClaimsEnum.PHONE_NUMBER, user.PhoneNumber),
+            new (UserClaimsType.USER_ID, user.Id),
+            new (UserClaimsType.EMAIL, user.Email),
+            new (UserClaimsType.FIRST_NAME, user.FirstName),
+            new (UserClaimsType.LAST_NAME, user.LastName),
+            new (UserClaimsType.PHONE_NUMBER, user.PhoneNumber),
         };
 
         var roles = await _userManager.GetRolesAsync(user);

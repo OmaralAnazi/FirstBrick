@@ -44,7 +44,7 @@ public class PaymentController : BaseController
     [Authorize]
     public async Task<IActionResult> GetTransactionsForCurrentUser()
     {
-        // TODO: implement it
-        return Ok("Not implemented yet");
+        var transactions = await _paymentService.GetTransactionsAsync(UserId);
+        return Ok(transactions);
     }
 }

@@ -18,7 +18,7 @@ public class RequireAdminRoleAttribute : AuthorizeAttribute, IAuthorizationFilte
             return;
         }
 
-        var isAdmin = context.HttpContext.User.IsInRole(UserRolesEnum.ADMIN);
+        var isAdmin = context.HttpContext.User.IsInRole(UserRolesType.ADMIN);
         if (!isAdmin)
             context.Result = new ForbidResult();
     }
