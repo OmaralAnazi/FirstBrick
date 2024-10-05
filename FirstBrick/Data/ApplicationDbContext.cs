@@ -10,6 +10,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<AppUser> AppUsers { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Fund> Funds { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

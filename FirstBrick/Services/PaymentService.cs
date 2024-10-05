@@ -21,7 +21,7 @@ public class PaymentService : IPaymentService
     public async Task<BalanceDto> DepositAsync(string userId, double amount)
     {
         var wallet = await _paymentRepository.DepositAsync(userId, amount);
-        await _paymentRepository.CreateTransactionAsync(wallet.Id, Enums.TransactionType.Deposit, amount, "Direct deposit to the wallet");
+        await _paymentRepository.CreateTransactionAsync(wallet.Id, Enums.TransactionType.Deposit, amount, $"Deposit {amount}SAR to the wallet");
         return new BalanceDto(wallet);
     }
 
@@ -34,7 +34,7 @@ public class PaymentService : IPaymentService
     public async Task<BalanceDto> WithdrawAsync(string userId, double amount)
     {
         var wallet = await _paymentRepository.WithdrawAsync(userId, amount);
-        await _paymentRepository.CreateTransactionAsync(wallet.Id, Enums.TransactionType.Withdraw, amount, "Direct withdraw to the wallet");
+        await _paymentRepository.CreateTransactionAsync(wallet.Id, Enums.TransactionType.Withdraw, amount, $"Withdraw {amount}SAR from the wallet");
         return new BalanceDto(wallet);
     }
 
