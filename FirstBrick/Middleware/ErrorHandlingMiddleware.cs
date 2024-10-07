@@ -1,4 +1,5 @@
 ﻿using FirstBrick.Exceptions;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace FirstBrick.Middleware;
@@ -31,21 +32,21 @@ public class ErrorHandlingMiddleware
     {
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)exception.StatusCode;
-        return context.Response.WriteAsync(new
+        return context.Response.WriteAsync(JsonConvert.SerializeObject(new
         {
             error = exception.Message,
-            errorCode = exception.ErrorCode,
-        }.ToString());
+            errorCode = exception.ErrorCode
+        }));
     }
 
     private static Task HandleUnexpectedExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        return context.Response.WriteAsync(new
+        return context.Response.WriteAsync(JsonConvert.SerializeObject(new
         {
             error = "An unexpected error occurred.",
-            errorCode = "E9999",
-        }.ToString());
+            errorCode = "E9999"
+        }));
     }
 }

@@ -27,4 +27,12 @@ public class FundController(IFundService fundService) : BaseController
         var fundDto = await _fundService.CreateFundAsync(creatFundDto);
         return Ok(fundDto);
     }
+
+    [HttpPost("invest")]
+    [Authorize]
+    public async Task<IActionResult> FundInvest([FromBody] FundInvestDto fundInvestDto)
+    {
+        var investmentDto = await _fundService.InvestAsync(UserId, fundInvestDto);
+        return Ok(investmentDto);
+    }
 }

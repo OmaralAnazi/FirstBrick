@@ -1,6 +1,7 @@
 ﻿using FirstBrick.Dtos.Responses;
 using FirstBrick.Entities;
 using FirstBrick.Enums;
+using FirstBrick.Events;
 
 namespace FirstBrick.Interfaces;
 

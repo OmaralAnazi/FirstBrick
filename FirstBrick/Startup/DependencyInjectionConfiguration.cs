@@ -20,6 +20,8 @@ public static class DependencyInjectionConfiguration
 
         // Register event handlers
         services.AddScoped<IEventHandler<UserRegisteredEvent>, UserRegisteredEventHandler>();
+        services.AddScoped<IEventHandler<InvestmentRequestedEvent>, InvestmentRequestedEventHandler>();
+        services.AddScoped<IEventHandler<InvestmentProcessedEvent>, InvestmentProcessedEventHandler>();
 
         return services;
     }

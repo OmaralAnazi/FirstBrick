@@ -11,6 +11,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Fund> Funds { get; set; }
+    public DbSet<Investment> Investments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

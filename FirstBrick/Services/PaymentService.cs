@@ -1,4 +1,6 @@
-﻿using FirstBrick.Dtos.Responses;
+﻿using EasyNetQ;
+using FirstBrick.Dtos.Responses;
+using FirstBrick.Events;
 using FirstBrick.Interfaces;
 
 namespace FirstBrick.Services;
@@ -6,10 +8,12 @@ namespace FirstBrick.Services;
 public class PaymentService : IPaymentService
 {
     private readonly IPaymentRepository _paymentRepository;
+    private readonly IBus _bus;
 
-    public PaymentService(IPaymentRepository paymentRepository)
+    public PaymentService(IPaymentRepository paymentRepository, IBus bus)
     {
         _paymentRepository = paymentRepository;
+        _bus = bus;
     }
 
     public async Task<BalanceDto> CreateWalletAsync(string userId)
@@ -36,6 +40,21 @@ public class PaymentService : IPaymentService
         var wallet = await _paymentRepository.WithdrawAsync(userId, amount);
         await _paymentRepository.CreateTransactionAsync(wallet.Id, Enums.TransactionType.Withdraw, amount, $"Withdraw {amount}SAR from the wallet");
         return new BalanceDto(wallet);
+    }
+
+    public async Task HandleInvestAsync(InvestmentRequestedEvent eventMessage)
+    {
+        Console.WriteLine("HandleInvestAsync - EventMessage: " + eventMessage);
+        try
+        {
+            var wallet = await _paymentRepository.WithdrawAsync(eventMessage.UserId, eventMessage.Amount);
+            await _paymentRepository.CreateTransactionAsync(wallet.Id, Enums.TransactionType.Invest, eventMessage.Amount, $"Invested {eventMessage.Amount}SAR from the wallet");
+            await _bus.PubSub.PublishAsync(new InvestmentProcessedEvent(eventMessage.InvestmentId, true));
+        }
+        catch 
+        {
+            await _bus.PubSub.PublishAsync(new InvestmentProcessedEvent(eventMessage.InvestmentId, false));
+        }
     }
 
     public async Task<PaginatedResponse<TransactionsDto>> GetTransactionsAsync(string userId, int pageNumber, int pageSize)

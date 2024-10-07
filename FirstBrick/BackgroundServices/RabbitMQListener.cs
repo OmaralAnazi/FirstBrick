@@ -15,21 +15,19 @@ public class RabbitMQListener : IHostedService
         _serviceProvider = serviceProvider;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        // Subscribe to events
-        _bus.PubSub.Subscribe<UserRegisteredEvent>("user_service", HandleUserRegisteredEvent);
-
-        return Task.CompletedTask;
+        // NOTE: naming pattern for the subscription ID: "{service_name}_{event_name}"
+        await _bus.PubSub.SubscribeAsync<UserRegisteredEvent>("payment_service_user_registered", HandleEvent, cancellationToken: cancellationToken);
+        await _bus.PubSub.SubscribeAsync<InvestmentRequestedEvent>("payment_service_investment_requested", HandleEvent, cancellationToken: cancellationToken);
+        await _bus.PubSub.SubscribeAsync<InvestmentProcessedEvent>("investment_service_investment_processed", HandleEvent, cancellationToken: cancellationToken);
     }
 
-    private void HandleUserRegisteredEvent(UserRegisteredEvent eventMessage)
+    private async Task HandleEvent<TEvent>(TEvent eventMessage)
     {
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var handler = scope.ServiceProvider.GetRequiredService<IEventHandler<UserRegisteredEvent>>();
-            handler.HandleAsync(eventMessage);
-        }
+        using var scope = _serviceProvider.CreateScope();
+        var handler = scope.ServiceProvider.GetRequiredService<IEventHandler<TEvent>>();
+        await handler.HandleAsync(eventMessage);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
