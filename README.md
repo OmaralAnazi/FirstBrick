@@ -77,7 +77,6 @@ dotnet restore
 "ConnectionStrings": {
    "DefaultConnection": "Host=localhost;Database=FirstBrickDB;Username=your_username;Password=your_password"
 }
-
 ```
 
 4. Configure RabbitMQ: Update the RabbitMQ connection settings in the appsettings.json file with your RabbitMQ credentials (ensure that the RabbitMQ server is running before starting the project).
@@ -87,11 +86,9 @@ dotnet restore
    "Username": "guest",
    "Password": "guest"
 }
-
 ```
 
 5. Run the Project:
 ```
 dotnet run
-
 ```
