@@ -17,6 +17,8 @@ public static class DependencyInjectionConfiguration
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IFundService, FundService>();
         services.AddScoped<IFundRepository, FundRepository>();
+        services.AddScoped<IPortfolioService, PortfolioService>();
+        services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 
         // Register event handlers
         services.AddScoped<IEventHandler<UserRegisteredEvent>, UserRegisteredEventHandler>();

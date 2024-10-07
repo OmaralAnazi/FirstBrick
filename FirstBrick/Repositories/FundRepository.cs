@@ -30,6 +30,11 @@ public class FundRepository(ApplicationDbContext context) : IFundRepository
         return await _context.Funds.FirstOrDefaultAsync(f => f.Key == id) ?? throw ApiExceptions.FundNotFound;
     }
 
+    public async Task<Fund> GetFundByIdAsync(int id)
+    {
+        return await _context.Funds.FirstOrDefaultAsync(f => f.Id == id) ?? throw ApiExceptions.FundNotFound;
+    }
+
     public async Task<Investment> CreateInvestment(string userId, Fund fund, int units)
     {
         var investment = new Investment(fund, userId, units);

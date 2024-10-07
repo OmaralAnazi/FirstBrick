@@ -1,7 +1,9 @@
-﻿namespace FirstBrick.Interfaces;
+﻿using FirstBrick.Dtos.Responses;
+
+namespace FirstBrick.Interfaces;
 
 public interface IPortfolioService
 {
-    Task<List<string>> getUserInvestmentsAsync(string userId);
-    Task<List<string>> getUserInvestmentsAsync(string userId, string fundId);
+    Task<List<InvestmentDto>> getUserInvestmentsAsync(string userId);
+    Task<List<InvestmentDto>> getUserInvestmentsAsync(string userId, string fundId);
 }

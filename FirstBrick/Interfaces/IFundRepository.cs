@@ -7,6 +7,7 @@ public interface IFundRepository
 {
     public Task<Fund> CreateFundAsync(CreateFundDto createFundDto);
     public Task<List<Fund>> GetAllFundsAsync();
+    public Task<Fund> GetFundByIdAsync(int id);
     public Task<Fund> GetFundByIdAsync(string id);
     public Task<Investment> CreateInvestment(string userId, Fund fund, int units);
     public Task UpdateInvestmentStatusAsync(int investmentId, bool isApproved);
